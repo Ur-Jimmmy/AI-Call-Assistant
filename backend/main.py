@@ -5,10 +5,15 @@ import os
 
 app = FastAPI()
 
-client = OpenAI(api_key=os.getenv("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"))
+# IMPORTANT: do NOT hardcode the key
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class Message(BaseModel):
     text: str
+
+@app.get("/")
+def health():
+    return {"status": "AI Call Assistant running"}
 
 @app.post("/chat")
 async def chat(message: Message):
@@ -19,5 +24,4 @@ async def chat(message: Message):
             {"role": "user", "content": message.text}
         ]
     )
-
     return {"reply": response.choices[0].message.content}
